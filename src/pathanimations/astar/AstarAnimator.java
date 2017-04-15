@@ -27,6 +27,14 @@ public class AstarAnimator implements Animator {
         this.diagonalsAllowed = diagonalsAllowed;
     }
 
+    public void setHeuristic(Heuristic heuristic) {
+        this.heuristic = heuristic;
+    }
+
+    public void setDiagonalsAllowed(DiagonalsAllowed diagonalsAllowed) {
+        this.diagonalsAllowed = diagonalsAllowed;
+    }
+
     private float calcHeuristic(Node n1, Node n2) {
         return heuristic.getFor(n1.point, n2.point);
     }
@@ -90,7 +98,6 @@ public class AstarAnimator implements Animator {
         for (Node node : path) {
             anim.addFrame(new Frame(node.point, State.PATH));
         }
-        System.out.println(path);
         return anim;
     }
 
@@ -111,8 +118,8 @@ public class AstarAnimator implements Animator {
     private class Node {
 
         private final Point point;
-        private float gCost = Float.MAX_VALUE;
-        private float hCost = Float.MAX_VALUE;
+        private float gCost = 0;
+        private float hCost = 0;
         private float fCost = Float.MAX_VALUE;
         private Node previous = null;
 

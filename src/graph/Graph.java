@@ -10,12 +10,18 @@ public class Graph {
     private final Map<Point, Location> graph;
     private Point start;
     private Point dest;
+    private int size;
 
     public List<Point> allPoints() {
         return new ArrayList<>(graph.keySet());
     }
 
+    public int size() {
+        return size;
+    }
+
     public Graph(int size) { // graph will always be a square
+        this.size = size;
         this.graph = new HashMap<>();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {

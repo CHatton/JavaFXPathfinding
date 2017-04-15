@@ -30,7 +30,6 @@ public class NoDiagonals implements DiagonalsAllowed {
                 neighbours.add(p);
             }
         }
-
         return neighbours;
     }
 }

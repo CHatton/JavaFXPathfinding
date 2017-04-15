@@ -2,10 +2,12 @@ package pathanimations.astar.heuristics;
 
 import graph.Point;
 
-public class Euclidian implements Heuristic {
+public class Euclidean implements Heuristic {
 
     @Override
-    public float getFor(Point p1, Point p2) {
-        return Math.abs(p1.x() - p2.x()) + Math.abs(p1.y() - p2.y());
+    public float getFor(Point p, Point q) {
+        double xSquared = Math.pow(q.x() - p.x(), 2.0);
+        double ySquared = Math.pow(q.y() - p.y(), 2.0);
+        return (float) Math.sqrt(xSquared + ySquared);
     }
 }

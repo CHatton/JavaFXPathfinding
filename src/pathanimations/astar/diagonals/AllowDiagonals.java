@@ -1,4 +1,4 @@
-package pathanimations.astar.directions;
+package pathanimations.astar.diagonals;
 
 import graph.Graph;
 import graph.Point;
@@ -6,7 +6,7 @@ import graph.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllowDiagonals implements Directional {
+public class AllowDiagonals implements DiagonalsAllowed {
 
     private final Graph graph;
 

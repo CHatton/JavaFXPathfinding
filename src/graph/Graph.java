@@ -27,6 +27,10 @@ public class Graph {
         this.dest = new Point(size - 1, size - 1); // and bottom right
     }
 
+    public boolean contains(Point point) {
+        return graph.keySet().contains(point);
+    }
+
     private void addLocation(Point point, Location location) {
         this.graph.put(point, location);
     }

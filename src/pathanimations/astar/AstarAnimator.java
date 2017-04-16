@@ -2,7 +2,7 @@ package pathanimations.astar;
 
 import graph.Graph;
 import graph.Point;
-import pathanimations.Animation;
+import pathanimations.GraphAnimation;
 import pathanimations.Animator;
 import pathanimations.Frame;
 import pathanimations.State;
@@ -14,15 +14,12 @@ import java.util.stream.Collectors;
 
 public class AstarAnimator implements Animator {
     private final Graph graph;
-    private Node dest;
-    private Node start;
+
     private Heuristic heuristic;
     private DiagonalsAllowed diagonalsAllowed;
 
     public AstarAnimator(Graph graph, Heuristic heuristic, DiagonalsAllowed diagonalsAllowed) {
         this.graph = graph;
-        this.dest = new Node(graph.dest());
-        this.start = new Node(graph.start());
         this.heuristic = heuristic;
         this.diagonalsAllowed = diagonalsAllowed;
     }
@@ -49,15 +46,17 @@ public class AstarAnimator implements Animator {
     }
 
     @Override
-    public Animation animate() {
-        Animation anim = new Animation();
+    public GraphAnimation animate() {
+        GraphAnimation anim = new GraphAnimation();
 
         Set<Node> closedSet = new HashSet<>();
         Queue<Node> frontier = new PriorityQueue<>(Comparator.comparingDouble(o -> o.fCost));
-        frontier.offer(start);
+        frontier.offer(new Node(graph.start()));
+        Node dest = new Node(graph.dest());
 
         while (!frontier.isEmpty()) {
             Node current = frontier.poll();
+
             current.hCost = calcHeuristic(current, dest);
             if (current.equals(dest)) {
                 dest = current; // reassign to keep the full path
@@ -94,14 +93,14 @@ public class AstarAnimator implements Animator {
 
         } // while not empty
 
-        List<Node> path = constructPath();
+        List<Node> path = constructPath(dest);
         for (Node node : path) {
             anim.addFrame(new Frame(node.point, State.PATH));
         }
         return anim;
     }
 
-    private List<Node> constructPath() {
+    private List<Node> constructPath(Node dest) {
         /*
         create the path between start and destination nodes
          */

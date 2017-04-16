@@ -2,7 +2,8 @@ package main;
 
 import graph.Graph;
 import javafx.fxml.FXML;
-import pathanimations.Animation;
+import pathanimations.AnimationDisplay;
+import pathanimations.GraphAnimation;
 import pathanimations.Animator;
 import pathanimations.astar.AstarAnimator;
 import pathanimations.astar.diagonals.AllowDiagonals;
@@ -17,7 +18,7 @@ public class Controller {
 
     private Graph graph;
     private Animator activeAnimator;
-    private RectanglePainter painter;
+    private AnimationDisplay animationDisplay;
 
 
     void setGraph(Graph graph) {
@@ -28,19 +29,19 @@ public class Controller {
         activeAnimator = animator;
     }
 
-    void setPainter(RectanglePainter painter) {
-        this.painter = painter;
+    void setAnimationDisplay(AnimationDisplay animationDisplay) {
+        this.animationDisplay = animationDisplay;
     }
 
     @FXML
     private void playAnimation() throws InterruptedException {
-        Animation anim = activeAnimator.animate();
-        painter.paintAnimation(anim);
+        GraphAnimation anim = activeAnimator.animate();
+        animationDisplay.playAnimation(anim);
     }
 
     @FXML
     private void clearScreen() {
-        painter.paintCleanGraph(graph);
+        animationDisplay.renderNewGraph(graph);
     }
 
 

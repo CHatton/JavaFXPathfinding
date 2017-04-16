@@ -46,11 +46,15 @@ public class Graph {
     }
 
     public void open(Point point) {
-        graph.get(point).open();
+        if (!point.equals(dest)) {
+            graph.get(point).open();
+        }
     }
 
     public void close(Point point) {
-        graph.get(point).close();
+        if (!point.equals(start)) {
+            graph.get(point).close();
+        }
     }
 
     public void assignStart(Point startingPoint) {

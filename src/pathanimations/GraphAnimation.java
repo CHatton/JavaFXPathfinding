@@ -3,10 +3,10 @@ package pathanimations;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Animation {
+public class GraphAnimation {
     private Queue<Frame> animationFrames;
 
-    public Animation() {
+    public GraphAnimation() {
         this.animationFrames = new LinkedList<>();
     }
 

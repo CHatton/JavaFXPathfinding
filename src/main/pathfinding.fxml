@@ -6,6 +6,7 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Slider?>
 <BorderPane fx:controller="main.Controller" xmlns:fx="http://javafx.com/fxml">
     <right>
         <TitledPane text="A Star">
@@ -30,9 +31,15 @@
         </TitledPane>
     </right>
     <bottom>
-        <HBox>
-            <Button text="PLAY ANIMATION" onAction="#playAnimation"/>
-            <Button text="CLEAR" onAction="#clearScreen"/>
-        </HBox>
+        <VBox>
+            <Slider fx:id="graphSize" minWidth="0" maxWidth="600" showTickMarks="true"
+                    value="60" onMouseReleased="#updateGraphSize"/>
+
+
+            <HBox>
+                <Button text="PLAY ANIMATION" onAction="#playAnimation"/>
+                <Button text="CLEAR" onAction="#clearScreen"/>
+            </HBox>
+        </VBox>
     </bottom>
 </BorderPane>

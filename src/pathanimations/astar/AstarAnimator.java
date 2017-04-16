@@ -32,7 +32,7 @@ public class AstarAnimator implements Animator {
         this.diagonalsAllowed = diagonalsAllowed;
     }
 
-    private float calcHeuristic(Node n1, Node n2) {
+    private double calcHeuristic(Node n1, Node n2) {
         return heuristic.getFor(n1.point, n2.point);
     }
 
@@ -74,7 +74,7 @@ public class AstarAnimator implements Animator {
                     continue;
                 }
 
-                float gCost = current.gCost + Math.abs(
+                double gCost = current.gCost + Math.abs(
                         current.point.x() - next.point.x()) + Math.abs(current.point.y() - next.point.y());
 
                 if (!frontier.contains(next)) {
@@ -117,9 +117,9 @@ public class AstarAnimator implements Animator {
     private class Node {
 
         private final Point point;
-        private float gCost = 0;
-        private float hCost = 0;
-        private float fCost = Float.MAX_VALUE;
+        private double gCost = 0;
+        private double hCost = 0;
+        private double fCost = Float.MAX_VALUE;
         private Node previous = null;
 
 

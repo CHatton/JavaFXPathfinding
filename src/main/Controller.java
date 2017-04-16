@@ -2,6 +2,7 @@ package main;
 
 import graph.Graph;
 import javafx.fxml.FXML;
+import javafx.scene.control.Slider;
 import pathanimations.AnimationDisplay;
 import pathanimations.GraphAnimation;
 import pathanimations.Animator;
@@ -20,6 +21,14 @@ public class Controller {
     private Animator activeAnimator;
     private AnimationDisplay animationDisplay;
 
+    @FXML
+    private Slider graphSize;
+
+    @FXML
+    void updateGraphSize() {
+        graph.initAtSize((int) graphSize.getValue());
+        animationDisplay.renderNewGraph(graph);
+    }
 
     void setGraph(Graph graph) {
         this.graph = graph;
@@ -47,6 +56,7 @@ public class Controller {
 
     @FXML
     private void setEuclidean() {
+        System.out.println(graphSize.getValue());
         setHeuristic(new Euclidean());
     }
 

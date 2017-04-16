@@ -2,41 +2,50 @@ package pathanimations;
 
 import graph.Graph;
 import graph.Point;
-import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.scene.Group;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class AnimationDisplay {
-    private final Group displayArea;
+    private final Canvas displayArea;
     private final Graph graph;
-    private final Map<Point, Rectangle> rectangles;
-    private final int size;
+    private final double size;
     private boolean animationPlaying = false;
 
 
-    public AnimationDisplay(Group displayArea, Graph graph, int size) {
+    public AnimationDisplay(Canvas displayArea, Graph graph, int size) {
         this.displayArea = displayArea;
         this.graph = graph;
-        this.rectangles = new HashMap<>();
         this.size = size;
         renderNewGraph(graph);
     }
 
     private void drawPoint(Point point, Color color) {
-        Rectangle rect = rectangles.computeIfAbsent(point, this::createRectangle);
-        alignRectangleWithPoint(rect, point);
-        rect.setFill(color);
+
+        double x = point.x();
+        double y = point.y();
+
+        double sizeOfOne = size / graph.size();
+        double margin = sizeOfOne * (0.05);
+
+        GraphicsContext gc = displayArea.getGraphicsContext2D();
+        gc.setFill(color);
+        gc.fillRect(x * sizeOfOne, y * sizeOfOne, sizeOfOne - margin, sizeOfOne - margin);
+    }
+
+
+    private void clearCanvas() {
+        GraphicsContext gc = displayArea.getGraphicsContext2D();
+        gc.clearRect(0, 0, displayArea.getWidth(), displayArea.getHeight());
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, displayArea.getWidth(), displayArea.getHeight());
     }
 
     public void renderNewGraph(Graph graph) {
         if (!animationPlaying) {
+            clearCanvas();
             for (Point point : graph.allPoints()) {
                 if (point.equals(graph.start())) {
                     drawPoint(point, Colours.START);
@@ -73,44 +82,19 @@ public class AnimationDisplay {
 
     }
 
-    private void alignRectangleWithPoint(Rectangle rect, Point point) {
-        double sizeOfOne = size / graph.size();
-        double margin = sizeOfOne * (0.05);
-        rect.setX(point.x() * sizeOfOne);
-        rect.setY(point.y() * sizeOfOne);
-        rect.setHeight(sizeOfOne - margin);
-        rect.setWidth(sizeOfOne - margin);
-    }
-
-    private Rectangle createRectangle(Point point) {
-        Rectangle rect = new Rectangle();
-        alignRectangleWithPoint(rect, point);
-        rectangles.put(point, rect);
-        displayArea.getChildren().add(rect);
-        return rect;
-    }
-
     private void renderFrame(Frame frame) {
         Point point = frame.point();
         State state = frame.state();
-        Rectangle rect = rectangles.get(point);
-
-        ScaleTransition anim = FXAnimationFactory.makeRectangleAnimation();
-        anim.setNode(rect);
-
 
         switch (state) {
             case OPEN:
-                rect.setFill(Colours.OPENLIST);
+                drawPoint(point, Colours.OPENLIST);
                 break;
             case FRONTIER:
-                rect.setFill(Colours.FRONTIER);
+                drawPoint(point, Colours.FRONTIER);
                 break;
             case PATH:
-                rect.setFill(Colours.PATH);
-                break;
+                drawPoint(point, Colours.PATH);
         }
-
-//        anim.play();
     }
 }

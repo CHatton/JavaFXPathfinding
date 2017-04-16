@@ -21,8 +21,13 @@ public class Graph {
     }
 
     public Graph(int size) { // graph will always be a square
-        this.size = size;
+        this.size = 0;
         this.graph = new HashMap<>();
+        initAtSize(size);
+    }
+
+    public void initAtSize(int size) {
+        this.graph.clear();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 // fill up whole graph with open spaces
@@ -31,6 +36,9 @@ public class Graph {
         }
         this.start = new Point(0, 0); // default to top left
         this.dest = new Point(size - 1, size - 1); // and bottom right
+        this.graph.put(this.start, new Location(true));
+        this.graph.put(this.dest, new Location(true));
+        this.size = size;
     }
 
     public boolean contains(Point point) {

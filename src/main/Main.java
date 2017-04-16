@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import pathanimations.AnimationDisplay;
@@ -24,11 +25,13 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("pathfinding.fxml"));
         BorderPane root = loader.load();
 
-        Group displayArea = new Group();
-        root.getChildren().add(displayArea);
+//        Group displayArea = new Group();
+//        root.getChildren().add(displayArea);
 
-        AnimationDisplay display = new AnimationDisplay(displayArea, graph, 600);
-//        RectanglePainter painter = new RectanglePainter(group, graph);
+        Canvas canvas = new Canvas(600, 600);
+        root.getChildren().add(canvas);
+
+        AnimationDisplay display = new AnimationDisplay(canvas, graph, 600);
 
         Controller controller = loader.getController();
         controller.setGraph(graph);
@@ -37,7 +40,7 @@ public class Main extends Application {
 
         primaryStage.setTitle("JFX Pathfinding Visualiser");
         int WIDTH = 800;
-        int HEIGHT = 630;
+        int HEIGHT = 660;
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
 
         primaryStage.show();

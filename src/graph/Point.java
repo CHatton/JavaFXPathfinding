@@ -1,19 +1,19 @@
 package graph;
 
 public class Point {
-    private final int x;
-    private final int y;
+    private final double x;
+    private final double y;
 
-    public Point(int x, int y) {
+    public Point(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public int x() {
+    public double x() {
         return x;
     }
 
-    public int y() {
+    public double y() {
         return y;
     }
 
@@ -37,6 +37,6 @@ public class Point {
 
     @Override
     public int hashCode() {
-        return x * 91 ^ y / 17;
+        return (int)x * 91 ^ (int)y / 17;
     }
 }

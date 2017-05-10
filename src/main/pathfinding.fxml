@@ -14,7 +14,8 @@
                 value="60" onMouseReleased="#updateGraphSize"/>
         <HBox spacing="10">
             <Button text="PLAY ANIMATION" onAction="#playAnimation"/>
-            <Button text="CLEAR" onAction="#clearScreen"/>
+            <Button text="CLEAR PATH" onAction="#clearScreen"/>
+            <Button text="CLEAR WALLS" onAction="#clearWalls"/>
         </HBox>
     </VBox>
     <VBox>

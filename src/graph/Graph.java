@@ -40,6 +40,13 @@ public class Graph {
         this.size = size;
     }
 
+    public void initAtSize(int size, Point start, Point dest) {
+
+        initAtSize(size);
+        assignStart(start);
+        assignDest(dest);
+    }
+
     public boolean contains(Point point) {
         return graph.keySet().contains(point);
     }
@@ -65,11 +72,13 @@ public class Graph {
     }
 
     public void assignStart(Point startingPoint) {
+        assert !startingPoint.equals(dest);
         this.start = startingPoint;
         addLocation(startingPoint, new Location(true));
     }
 
     public void assignDest(Point destination) {
+        assert !destination.equals(start);
         this.dest = destination;
         this.graph.put(destination, new Location(true));
     }

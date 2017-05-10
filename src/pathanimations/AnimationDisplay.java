@@ -37,11 +37,7 @@ public class AnimationDisplay {
                 }
                 EventType type = e.getEventType();
 
-                if (current.equals(graph.dest()) && current.equals(graph.start())) {
-                    return;
-                }
-
-                if (current.equals(graph.dest()) && !draggingStart) {
+                if (current.equals(graph.dest()) && !draggingStart) { // avoid dragging both at once
                     draggingDest = (type == MouseEvent.MOUSE_PRESSED || type == MouseEvent.MOUSE_DRAGGED);
                 } else if (current.equals(graph.start()) && !draggingDest) {
                     draggingStart = (type == MouseEvent.MOUSE_PRESSED || type == MouseEvent.MOUSE_DRAGGED);
@@ -74,7 +70,6 @@ public class AnimationDisplay {
                         || type == MouseEvent.MOUSE_PRESSED)
                         && e.isSecondaryButtonDown(); // right click removes walls
 
-
                 if (closingPoints) {
                     closePoint(current);
                 } else if (openingPoints) {
@@ -105,8 +100,8 @@ public class AnimationDisplay {
         double sizeOfOne = size / graphSize;
 
         GraphicsContext gc = displayArea.getGraphicsContext2D();
-        gc.setFill(Color.BLACK);
-        gc.fillRect(x * sizeOfOne, y * sizeOfOne, sizeOfOne, sizeOfOne);
+//        gc.setFill(Color.BLACK);
+//        gc.fillRect(x * sizeOfOne, y * sizeOfOne, sizeOfOne, sizeOfOne);
         gc.setFill(color);
         gc.fillRect(x * sizeOfOne, y * sizeOfOne, sizeOfOne, sizeOfOne);
     }
@@ -142,6 +137,7 @@ public class AnimationDisplay {
         }
     }
 
+
     public void playAnimation(GraphAnimation animation) throws InterruptedException {
         renderNewGraph(graph);
         Task task = new Task<Void>() {
@@ -152,8 +148,7 @@ public class AnimationDisplay {
                     Thread.sleep(2);
                 }
                 animationPlaying = false;
-                return null;
-
+                return null; // never do anything with this value
             }
         };
         if (!animationPlaying) {

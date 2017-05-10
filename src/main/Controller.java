@@ -1,6 +1,7 @@
 package main;
 
 import graph.Graph;
+import graph.Point;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Slider;
@@ -92,6 +93,18 @@ public class Controller {
         if (activeAnimator instanceof AstarAnimator) {
             ((AstarAnimator) activeAnimator).setDiagonalsAllowed(diagonalsAllowed);
         }
+    }
+
+    @FXML
+    private void clearWalls() {
+        for (Point p : graph.allPoints()) {
+            if (!graph.isPassable(p) && !p.equals(graph.start()) && !p.equals(graph.dest())) {
+                graph.open(p);
+            }
+        }
+        // don't want to lose start and destination points
+        graph.initAtSize(graph.size(), graph.start(), graph.dest());
+        animationDisplay.renderNewGraph(graph);
     }
 
 }

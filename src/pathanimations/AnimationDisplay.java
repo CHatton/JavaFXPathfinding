@@ -100,8 +100,8 @@ public class AnimationDisplay {
         double sizeOfOne = size / graphSize;
 
         GraphicsContext gc = displayArea.getGraphicsContext2D();
-//        gc.setFill(Color.BLACK);
-//        gc.fillRect(x * sizeOfOne, y * sizeOfOne, sizeOfOne, sizeOfOne);
+        gc.setFill(Color.BLACK);
+        gc.fillRect(x * sizeOfOne, y * sizeOfOne, sizeOfOne, sizeOfOne);
         gc.setFill(color);
         gc.fillRect(x * sizeOfOne, y * sizeOfOne, sizeOfOne, sizeOfOne);
     }
@@ -137,7 +137,6 @@ public class AnimationDisplay {
         }
     }
 
-
     public void playAnimation(GraphAnimation animation) throws InterruptedException {
         renderNewGraph(graph);
         Task task = new Task<Void>() {
@@ -145,7 +144,7 @@ public class AnimationDisplay {
             protected Void call() throws Exception {
                 while (animation.hasNext()) {
                     Platform.runLater(() -> renderFrame(animation.next()));
-                    Thread.sleep(2);
+                    Thread.sleep(4);
                 }
                 animationPlaying = false;
                 return null; // never do anything with this value
@@ -156,24 +155,33 @@ public class AnimationDisplay {
             Thread t = new Thread(task);
             t.start();
         }
-
     }
 
     private void renderFrame(Frame frame) {
         if (frame != null) {
             Point point = frame.point();
-            State state = frame.state();
-            switch (state) {
-                case OPEN:
-                    drawPoint(point, Colours.OPENLIST);
-                    break;
-                case FRONTIER:
-                    drawPoint(point, Colours.FRONTIER);
-                    break;
-                case PATH:
-                    drawPoint(point, Colours.PATH);
-            }
+            Color colour = colourFor(frame);
+            drawPoint(point, colour);
         }
-
     }
+
+    private Color colourFor(Frame frame) {
+        State state = frame.state();
+        switch (state) {
+            case OPEN:
+                return Colours.OPENLIST;
+            case FRONTIER:
+                return Colours.FRONTIER;
+            case PATH:
+                return Colours.PATH;
+            case START:
+                return Colours.START;
+            case DEST:
+                return Colours.DESTINATION;
+        }
+        throw new AssertionError("Invalid frame state provided");
+    }
+
 }
+
+

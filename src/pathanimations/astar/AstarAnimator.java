@@ -2,34 +2,41 @@ package pathanimations.astar;
 
 import graph.Graph;
 import graph.Point;
-import pathanimations.GraphAnimation;
 import pathanimations.Animator;
 import pathanimations.Frame;
+import pathanimations.GraphAnimation;
 import pathanimations.State;
-import pathanimations.astar.diagonals.DiagonalsAllowed;
+import pathanimations.astar.diagonals.DiagonalRule;
 import pathanimations.astar.heuristics.Heuristic;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AstarAnimator implements Animator {
 
     private final Graph graph;
     private Heuristic heuristic;
-    private DiagonalsAllowed diagonalsAllowed;
+    private DiagonalRule diagonalRule;
 
-    public AstarAnimator(Graph graph, Heuristic heuristic, DiagonalsAllowed diagonalsAllowed) {
+    public AstarAnimator(Graph graph, Heuristic heuristic, DiagonalRule diagonalRule) {
         this.graph = graph;
         this.heuristic = heuristic;
-        this.diagonalsAllowed = diagonalsAllowed;
+        this.diagonalRule = diagonalRule;
     }
 
     public void setHeuristic(Heuristic heuristic) {
         this.heuristic = heuristic;
     }
 
-    public void setDiagonalsAllowed(DiagonalsAllowed diagonalsAllowed) {
-        this.diagonalsAllowed = diagonalsAllowed;
+    public void setDiagonalRule(DiagonalRule diagonalRule) {
+        this.diagonalRule = diagonalRule;
     }
 
     private double calcHeuristic(Node n1, Node n2) {
@@ -37,7 +44,7 @@ public class AstarAnimator implements Animator {
     }
 
     private List<Node> getNeighbours(Node node) {
-        List<Point> neighbours = this.diagonalsAllowed.getNeighbours(node.point);
+        List<Point> neighbours = this.diagonalRule.getNeighbours(node.point);
         return neighbours.stream().map(Node::new).collect(Collectors.toList());
     }
 
@@ -49,11 +56,10 @@ public class AstarAnimator implements Animator {
     public GraphAnimation animate() {
 
         Set<Node> closedSet = new HashSet<>();
-        Queue<Node> frontier = new PriorityQueue<>(Comparator.comparingDouble(o -> o.fCost));
+        Queue<Node> frontier = new PriorityQueue<>(Comparator.comparingDouble(node -> node.fCost));
 
         Node startNode = new Node(graph.start());
         Node dest = new Node(graph.dest());
-        startNode.hCost = calcHeuristic(startNode, dest);
 
         frontier.offer(new Node(graph.start()));
 
@@ -62,14 +68,16 @@ public class AstarAnimator implements Animator {
         while (!frontier.isEmpty()) {
             Node current = frontier.poll();
 
-            current.hCost = calcHeuristic(current, dest);
-
             if (current.equals(dest)) {
-                dest = current; // reassign to keep the full path
+                dest = current; // reassign to keep the full path held by current
                 break;
             }
 
-            anim.addFrame(new Frame(current.point, State.OPEN));
+            if (current.equals(startNode)) {
+                anim.addFrame(new Frame(current.point, State.START));
+            } else {
+                anim.addFrame(new Frame(current.point, State.OPEN));
+            }
 
             closedSet.add(current);
 
@@ -80,7 +88,8 @@ public class AstarAnimator implements Animator {
                     continue;
                 }
 
-                double gCost = current.gCost + calcHeuristic(current, next);
+                double hCost = calcHeuristic(current, next);
+                double gCost = current.gCost + hCost;
 
                 if (!frontier.contains(next)) {
                     frontier.offer(next);
@@ -89,10 +98,13 @@ public class AstarAnimator implements Animator {
                 }
 
                 next.previous = current;
-                next.hCost = calcHeuristic(next, dest);
                 next.gCost = gCost;
-                next.fCost = next.gCost + next.hCost;
-                anim.addFrame(new Frame(next.point, State.FRONTIER));
+                next.fCost = next.gCost + calcHeuristic(next, dest);
+
+                if (!next.equals(dest)) {
+                    anim.addFrame(new Frame(next.point, State.FRONTIER));
+                }
+
             } // foreach neighbour
 
         } // while not empty
@@ -108,7 +120,13 @@ public class AstarAnimator implements Animator {
          */
         List<Node> path = new ArrayList<>();
         Node node = dest;
+        boolean atHead = true;
         while (node != null) {
+            if (atHead && node.previous == null) {
+                // there was no path found, don't want to highlight the point
+                return new ArrayList<>();
+            }
+            atHead = false;
             path.add(node);
             node = node.previous;
         }
@@ -120,7 +138,6 @@ public class AstarAnimator implements Animator {
 
         private final Point point;
         private double gCost = 0;
-        private double hCost = 0;
         private double fCost = Double.MAX_VALUE;
         private Node previous = null;
 
@@ -138,9 +155,7 @@ public class AstarAnimator implements Animator {
         public String toString() {
             return point.toString() + "\n" +
                     "fCost " + fCost + "\n" +
-                    "gCost " + gCost + "\n" +
-                    "hCost " + hCost + "\n";
-
+                    "gCost " + gCost + "\n";
         }
 
         @Override

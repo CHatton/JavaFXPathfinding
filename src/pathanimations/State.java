@@ -1,5 +1,5 @@
 package pathanimations;
 
 public enum State {
-    OPEN, FRONTIER, PATH
+    OPEN, FRONTIER, PATH, START, DEST
 }

@@ -34,6 +34,7 @@ public class Graph {
                 this.graph.put(new Point(i, j), new Location(true));
             }
         }
+
         assignStart(new Point((size * 4) / 15, size / 2)); // default to middle left
         assignDest(new Point((size * 11) / 15, size / 2)); // middle right
 
@@ -41,7 +42,6 @@ public class Graph {
     }
 
     public void initAtSize(int size, Point start, Point dest) {
-
         initAtSize(size);
         assignStart(start);
         assignDest(dest);
@@ -60,13 +60,13 @@ public class Graph {
     }
 
     public void open(Point point) {
-        if (!point.equals(dest)) {
+        if (!point.equals(start) && !point.equals(dest)) {
             graph.get(point).open();
         }
     }
 
     public void close(Point point) {
-        if (!point.equals(start)) {
+        if (!point.equals(start) && !point.equals(dest)) {
             graph.get(point).close();
         }
     }

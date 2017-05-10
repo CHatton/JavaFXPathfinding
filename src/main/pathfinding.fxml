@@ -11,7 +11,7 @@
     <VBox>
         <Canvas fx:id="canvas" height="600" width="600"/>
         <Slider fx:id="graphSize" minWidth="0" maxWidth="600" showTickMarks="true"
-                value="60" onMouseReleased="#updateGraphSize"/>
+                value="50" onMouseReleased="#updateGraphSize"/>
         <HBox spacing="10">
             <Button text="PLAY ANIMATION" onAction="#playAnimation"/>
             <Button text="CLEAR PATH" onAction="#clearScreen"/>

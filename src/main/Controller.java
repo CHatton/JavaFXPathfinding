@@ -9,9 +9,9 @@ import pathanimations.AnimationDisplay;
 import pathanimations.GraphAnimation;
 import pathanimations.Animator;
 import pathanimations.astar.AstarAnimator;
-import pathanimations.astar.diagonals.AllowDiagonals;
-import pathanimations.astar.diagonals.DiagonalsAllowed;
-import pathanimations.astar.diagonals.NoDiagonals;
+import pathanimations.astar.diagonals.AllowRule;
+import pathanimations.astar.diagonals.DiagonalRule;
+import pathanimations.astar.diagonals.DisallowRule;
 import pathanimations.astar.heuristics.Euclidean;
 import pathanimations.astar.heuristics.Heuristic;
 import pathanimations.astar.heuristics.Manhattan;
@@ -36,6 +36,7 @@ public class Controller {
         double value = percent * (maxSize / 100.00) + minSize;
         graph.initAtSize((int) value);
         animationDisplay.renderNewGraph(graph);
+
     }
 
     void init() {
@@ -81,17 +82,17 @@ public class Controller {
 
     @FXML
     private void enableDiagonals() {
-        setDiagonal(new AllowDiagonals(graph));
+        setDiagonal(new AllowRule(graph));
     }
 
     @FXML
     private void disableDiagonals() {
-        setDiagonal(new NoDiagonals(graph));
+        setDiagonal(new DisallowRule(graph));
     }
 
-    private void setDiagonal(DiagonalsAllowed diagonalsAllowed) {
+    private void setDiagonal(DiagonalRule diagonalRule) {
         if (activeAnimator instanceof AstarAnimator) {
-            ((AstarAnimator) activeAnimator).setDiagonalsAllowed(diagonalsAllowed);
+            ((AstarAnimator) activeAnimator).setDiagonalRule(diagonalRule);
         }
     }
 

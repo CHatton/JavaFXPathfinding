@@ -4,6 +4,6 @@ import graph.Point;
 
 import java.util.List;
 
-public interface DiagonalsAllowed {
+public interface DiagonalRule {
     List<Point> getNeighbours(Point point);
 }

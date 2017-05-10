@@ -6,11 +6,11 @@ import graph.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllowDiagonals implements DiagonalsAllowed {
+public class AllowRule implements DiagonalRule {
 
     private final Graph graph;
 
-    public AllowDiagonals(Graph graph) {
+    public AllowRule(Graph graph) {
         this.graph = graph;
     }
 

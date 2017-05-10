@@ -4,8 +4,8 @@ import graph.Point;
 
 public class Frame {
 
-    private Point point;
-    private State state;
+    private final Point point;
+    private final State state;
 
     public Frame(Point point, State state) {
         this.point = point;

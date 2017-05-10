@@ -34,10 +34,9 @@ public class Graph {
                 this.graph.put(new Point(i, j), new Location(true));
             }
         }
-        this.start = new Point(0, 0); // default to top left
-        this.dest = new Point(size - 1, size - 1); // and bottom right
-        this.graph.put(this.start, new Location(true));
-        this.graph.put(this.dest, new Location(true));
+        assignStart(new Point((size * 4) / 15, size / 2)); // default to middle left
+        assignDest(new Point((size * 11) / 15, size / 2)); // middle right
+
         this.size = size;
     }
 

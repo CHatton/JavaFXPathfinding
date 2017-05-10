@@ -2,6 +2,7 @@ package main;
 
 import graph.Graph;
 import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Slider;
 import pathanimations.AnimationDisplay;
 import pathanimations.GraphAnimation;
@@ -16,18 +17,28 @@ import pathanimations.astar.heuristics.Manhattan;
 
 public class Controller {
 
+    @FXML
+    private Canvas canvas;
+    @FXML
+    private Slider graphSize;
 
     private Graph graph;
     private Animator activeAnimator;
     private AnimationDisplay animationDisplay;
 
-    @FXML
-    private Slider graphSize;
 
     @FXML
     void updateGraphSize() {
-        graph.initAtSize((int) graphSize.getValue());
+        int minSize = 10;
+        int maxSize = 30;
+        double percent = graphSize.getValue();
+        double value = percent * (maxSize / 100.00) + minSize;
+        graph.initAtSize((int) value);
         animationDisplay.renderNewGraph(graph);
+    }
+
+    void init() {
+        this.animationDisplay = new AnimationDisplay(canvas, graph);
     }
 
     void setGraph(Graph graph) {
@@ -36,10 +47,6 @@ public class Controller {
 
     void setAnimator(Animator animator) {
         activeAnimator = animator;
-    }
-
-    void setAnimationDisplay(AnimationDisplay animationDisplay) {
-        this.animationDisplay = animationDisplay;
     }
 
     @FXML
@@ -56,7 +63,6 @@ public class Controller {
 
     @FXML
     private void setEuclidean() {
-        System.out.println(graphSize.getValue());
         setHeuristic(new Euclidean());
     }
 

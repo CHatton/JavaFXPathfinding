@@ -7,11 +7,13 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import pathanimations.AnimationDisplay;
 import pathanimations.astar.AstarAnimator;
 import pathanimations.astar.diagonals.NoDiagonals;
 import pathanimations.astar.heuristics.Euclidean;
+import pathanimations.astar.heuristics.Manhattan;
 
 
 public class Main extends Application {
@@ -21,28 +23,18 @@ public class Main extends Application {
         int GRAPH_SIZE = 30;
         Graph graph = new Graph(GRAPH_SIZE);
 
-
         FXMLLoader loader = new FXMLLoader(getClass().getResource("pathfinding.fxml"));
-        BorderPane root = loader.load();
-
-//        Group displayArea = new Group();
-//        root.getChildren().add(displayArea);
-
-        Canvas canvas = new Canvas(600, 600);
-        root.getChildren().add(canvas);
-
-        AnimationDisplay display = new AnimationDisplay(canvas, graph, 600);
+        HBox root = loader.load();
 
         Controller controller = loader.getController();
+        controller.setAnimator(new AstarAnimator(graph, new Manhattan(), new NoDiagonals(graph)));
         controller.setGraph(graph);
-        controller.setAnimator(new AstarAnimator(graph, new Euclidean(), new NoDiagonals(graph)));
-        controller.setAnimationDisplay(display);
+        controller.init();
 
         primaryStage.setTitle("JFX Pathfinding Visualiser");
         int WIDTH = 800;
         int HEIGHT = 660;
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
-
         primaryStage.show();
     }
 

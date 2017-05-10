@@ -13,8 +13,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class AstarAnimator implements Animator {
-    private final Graph graph;
 
+    private final Graph graph;
     private Heuristic heuristic;
     private DiagonalsAllowed diagonalsAllowed;
 
@@ -47,17 +47,23 @@ public class AstarAnimator implements Animator {
 
     @Override
     public GraphAnimation animate() {
-        GraphAnimation anim = new GraphAnimation();
 
         Set<Node> closedSet = new HashSet<>();
         Queue<Node> frontier = new PriorityQueue<>(Comparator.comparingDouble(o -> o.fCost));
-        frontier.offer(new Node(graph.start()));
+
+        Node startNode = new Node(graph.start());
         Node dest = new Node(graph.dest());
+        startNode.hCost = calcHeuristic(startNode, dest);
+
+        frontier.offer(new Node(graph.start()));
+
+        GraphAnimation anim = new GraphAnimation();
 
         while (!frontier.isEmpty()) {
             Node current = frontier.poll();
 
             current.hCost = calcHeuristic(current, dest);
+
             if (current.equals(dest)) {
                 dest = current; // reassign to keep the full path
                 break;
@@ -74,8 +80,7 @@ public class AstarAnimator implements Animator {
                     continue;
                 }
 
-                double gCost = current.gCost + Math.abs(
-                        current.point.x() - next.point.x()) + Math.abs(current.point.y() - next.point.y());
+                double gCost = current.gCost + calcHeuristic(current, next);
 
                 if (!frontier.contains(next)) {
                     frontier.offer(next);
@@ -87,16 +92,13 @@ public class AstarAnimator implements Animator {
                 next.hCost = calcHeuristic(next, dest);
                 next.gCost = gCost;
                 next.fCost = next.gCost + next.hCost;
-
                 anim.addFrame(new Frame(next.point, State.FRONTIER));
             } // foreach neighbour
 
         } // while not empty
 
-        List<Node> path = constructPath(dest);
-        for (Node node : path) {
-            anim.addFrame(new Frame(node.point, State.PATH));
-        }
+        constructPath(dest).forEach(node -> anim.addFrame(new Frame(node.point, State.PATH)));
+
         return anim;
     }
 
@@ -119,7 +121,7 @@ public class AstarAnimator implements Animator {
         private final Point point;
         private double gCost = 0;
         private double hCost = 0;
-        private double fCost = Float.MAX_VALUE;
+        private double fCost = Double.MAX_VALUE;
         private Node previous = null;
 
 
@@ -134,7 +136,11 @@ public class AstarAnimator implements Animator {
 
         @Override
         public String toString() {
-            return point.toString();
+            return point.toString() + "\n" +
+                    "fCost " + fCost + "\n" +
+                    "gCost " + gCost + "\n" +
+                    "hCost " + hCost + "\n";
+
         }
 
         @Override
@@ -143,7 +149,7 @@ public class AstarAnimator implements Animator {
                 return false;
             }
             Node otherNode = (Node) o;
-            return this.point.equals(otherNode.point);
+            return point.equals(otherNode.point);
         }
 
 

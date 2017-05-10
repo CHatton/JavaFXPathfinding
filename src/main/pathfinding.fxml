@@ -1,5 +1,4 @@
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -7,17 +6,27 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Slider?>
-<BorderPane fx:controller="main.Controller" xmlns:fx="http://javafx.com/fxml">
-    <right>
-        <TitledPane text="A Star">
-            <VBox>
+<?import javafx.scene.canvas.Canvas?>
+<HBox fx:controller="main.Controller" xmlns:fx="http://javafx.com/fxml">
+    <VBox>
+        <Canvas fx:id="canvas" height="600" width="600"/>
+        <Slider fx:id="graphSize" minWidth="0" maxWidth="600" showTickMarks="true"
+                value="60" onMouseReleased="#updateGraphSize"/>
+        <HBox spacing="10">
+            <Button text="PLAY ANIMATION" onAction="#playAnimation"/>
+            <Button text="CLEAR" onAction="#clearScreen"/>
+        </HBox>
+    </VBox>
+    <VBox>
+        <TitledPane text="A Star" alignment="BASELINE_CENTER">
+            <VBox spacing="5">
                 <Label text="Heuristic"/>
                 <fx:define>
                     <ToggleGroup fx:id="heuristicToggleGroup"/>
                 </fx:define>
                 <RadioButton text="Euclidian Distance" toggleGroup="$heuristicToggleGroup"
-                             selected="true" onAction="#setEuclidean"/>
-                <RadioButton text="Manhattan Distance" onAction="#setManhattan"
+                             onAction="#setEuclidean"/>
+                <RadioButton text="Manhattan Distance" selected="true" onAction="#setManhattan"
                              toggleGroup="$heuristicToggleGroup"/>
                 <Label text="Diagonals"/>
                 <fx:define>
@@ -29,17 +38,5 @@
                              toggleGroup="$diagonalsToggleGroup" onAction="#enableDiagonals"/>
             </VBox>
         </TitledPane>
-    </right>
-    <bottom>
-        <VBox>
-            <Slider fx:id="graphSize" minWidth="0" maxWidth="600" showTickMarks="true"
-                    value="60" onMouseReleased="#updateGraphSize"/>
-
-
-            <HBox>
-                <Button text="PLAY ANIMATION" onAction="#playAnimation"/>
-                <Button text="CLEAR" onAction="#clearScreen"/>
-            </HBox>
-        </VBox>
-    </bottom>
-</BorderPane>
+    </VBox>
+</HBox>
